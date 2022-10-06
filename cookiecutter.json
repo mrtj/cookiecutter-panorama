@@ -1,4 +1,5 @@
 {
     "project_name": "Panorama Video Processor",
-    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}"
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "camera_node_name": "camera_input"
 }
