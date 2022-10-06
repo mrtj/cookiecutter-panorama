@@ -6,15 +6,22 @@ class PassthroughNet(torch.nn.Module):
     def forward(self, x):
         return x
 
+class MeanNet(torch.nn.Module):
+    ''' A dummy neural network that returns the mean of the input. '''
+
+    def forward(self, x):
+        return torch.mean(x)
+
 def test_model(model):
     TEST_DATA = torch.Tensor([[1, 2], [3, 4]])
-    assert torch.equal(TEST_DATA, model(TEST_DATA))
+    output = model(TEST_DATA)
+    assert output == 2.5
 
 if __name__ == '__main__':
     print('This script creates a dummy passthrough pytorch model.')
-    MODEL_FILENAME = 'passthrough_net.pt'
+    MODEL_FILENAME = 'mean_net.pt'
     ARCHIVE_FILENAME = 'model.tar.gz'
-    model = PassthroughNet()
+    model = MeanNet()
     scripted = torch.jit.script(model)
     scripted.save(MODEL_FILENAME)
     print('Dummy passthrough model was saved to', MODEL_FILENAME)
