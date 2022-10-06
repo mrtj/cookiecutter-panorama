@@ -1,11 +1,11 @@
 {
     "mlModelDescriptor": {
         "envelopeVersion": "2021-01-01",
-        "framework": "",
+        "framework": "PYTORCH",
         "inputs": [
             {
-                "name": "",
-                "shape": []
+                "name": "input0",
+                "shape": [1, 3, {{cookiecutter.model_processing_height}}, {{cookiecutter.model_processing_width}}]
             }
         ]
     }

@@ -10,5 +10,7 @@
     "model_package_name": "{{ cookiecutter.project_slug }}_model",
     "model_package_version": "1.0",
     "model_asset_name": "{{ cookiecutter.model_package_name }}_asset",
-    "model_node_name": "{{ cookiecutter.model_package_name }}_node"
+    "model_node_name": "{{ cookiecutter.model_package_name }}_node",
+    "model_processing_width": "224",
+    "model_processing_height": "224"
 }
