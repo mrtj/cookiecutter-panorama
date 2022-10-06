@@ -42,7 +42,7 @@ class Application(panoramasdk.node):
 
     def process_frame(self, frame):
         # TODO: resize input to MODEL_INPUT_SIZE
-        fake_frame = np.rand(1, 3, *self.MODEL_INPUT_SIZE)
+        fake_frame = np.random.rand(1, 3, *self.MODEL_INPUT_SIZE)
         output = self.model(fake_frame)
         return output
 

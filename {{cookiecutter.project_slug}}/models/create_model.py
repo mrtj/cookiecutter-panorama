@@ -1,21 +1,16 @@
 import torch
 
-class PassthroughNet(torch.nn.Module):
-    ''' A dummy neural network that returns the input. '''
-
-    def forward(self, x):
-        return x
-
 class MeanNet(torch.nn.Module):
-    ''' A dummy neural network that returns the mean of the input. '''
-
+    ''' A dummy neural network that returns the mean of the input image.
+    Expected input shape: [batch, 3, height, width]
+    '''
     def forward(self, x):
-        return torch.mean(x)
+        return torch.mean(x, dim=(2, 3))
 
 def test_model(model):
-    TEST_DATA = torch.Tensor([[1, 2], [3, 4]])
+    TEST_DATA = torch.Tensor([[[[1,1],[1,1]],[[2,2],[2,2]],[[3,3],[3,3]]]])
     output = model(TEST_DATA)
-    assert output == 2.5
+    assert output.equal(torch.Tensor([[1, 2, 3]]))
 
 if __name__ == '__main__':
     print('This script creates a dummy passthrough pytorch model.')
