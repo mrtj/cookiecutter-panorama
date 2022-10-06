@@ -35,6 +35,12 @@
                 "interface": "panorama::hdmi_data_sink.hdmi0",
                 "overridable": false,
                 "launch": "onAppStart"
+            },
+            {
+                "name": "{{cookiecutter.model_asset_name}}",
+                "interface": "123456789012::{{cookiecutter.model_package_name}}.{{cookiecutter.model_asset_name}}_interface",
+                "overridable": false,
+                "launch": "onAppStart"
             }
         ],
         "edges": []

@@ -4,7 +4,36 @@
         "name": "{{cookiecutter.model_package_name}}",
         "version": "1.0",
         "description": "Default description for package {{cookiecutter.model_package_name}}",
-        "assets": [],
-        "interfaces": []
+        "assets": [
+            {
+                "name": "{{cookiecutter.model_asset_name}}",
+                "implementations": [
+                    {
+                        "type": "model",
+                        "assetUri": "deadbeaf01.tar.gz",
+                        "descriptorUri": "deadbeaf02.json"
+                    }
+                ]
+            }
+        ],
+        "interfaces": [
+            {
+                "name": "{{cookiecutter.model_asset_name}}_interface",
+                "category": "ml_model",
+                "asset": "{{cookiecutter.model_asset_name}}",
+                "inputs": [
+                    {
+                        "name": "video_in",
+                        "type": "media"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "video_out",
+                        "type": "media"
+                    }
+                ]
+            }
+        ]
     }
 }
