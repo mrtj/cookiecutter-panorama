@@ -49,6 +49,15 @@
                 "launch": "onAppStart"
             }
         ],
-        "edges": []
+        "edges": [
+            {
+                "producer": "{{cookiecutter.camera_node_name}}.video_out",
+                "consumer": "{{cookiecutter.code_node_name}}.video_in"
+            },
+            {
+                "producer": "{{cookiecutter.code_node_name}}.video_out",
+                "consumer": "{{cookiecutter.display_node_name}}.video_in"
+            }
+        ]
     }
 }
