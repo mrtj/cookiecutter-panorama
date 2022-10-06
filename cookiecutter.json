@@ -5,7 +5,10 @@
     "display_node_name": "display_output",
     "code_package_name": "{{ cookiecutter.project_slug }}_logic",
     "code_package_version": "1.0",
+    "code_asset_name": "{{ cookiecutter.code_package_name }}_asset",
+    "code_node_name": "{{ cookiecutter.code_package_name }}_node",
     "model_package_name": "{{ cookiecutter.project_slug }}_model",
     "model_package_version": "1.0",
-    "model_asset_name": "{{ cookiecutter.model_package_name }}_asset"
+    "model_asset_name": "{{ cookiecutter.model_package_name }}_asset",
+    "model_node_name": "{{ cookiecutter.model_package_name }}_node"
 }
