@@ -1,0 +1,4 @@
+boto3>=1.24.85
+numpy>=1.21.6
+opencv-python-headless>=4.6.0.66
+# panorama-backpack==0.1.6

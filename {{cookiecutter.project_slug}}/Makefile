@@ -21,6 +21,7 @@ PROJECT_SLUG := {{ cookiecutter.project_slug }}
 
 CODE_PACKAGE_NAME := {{ cookiecutter.code_package_name }}
 CODE_PACKAGE_VERSION := {{ cookiecutter.code_package_version }}
+CODE_ASSET_NAME := {{ cookiecutter.code_asset_name }}
 
 MODEL_PACKAGE_NAME := {{ cookiecutter.model_package_name }}
 MODEL_PACKAGE_VERSION := {{ cookiecutter.model_package_version }}
@@ -112,14 +113,14 @@ $(TEST_UTILITY_PATH): | build_dir
 	git clone $(TEST_UTILITY_URL) $(TEST_UTILITY_PATH)
 
 set_model_info: set_account_id
-	$(eval MODEL_PACKAGE_PATH := $(PROJECT_SLUG)/packages/${AWS_ACCOUNT_ID}-${MODEL_PACKAGE_NAME}-${MODEL_PACKAGE_VERSION})
-	$(eval MODEL_FRAMEWORK :=  $(shell cat ${MODEL_PACKAGE_PATH}/descriptor.json | python -c "$(MODEL_INFO_SCRIPT); print(info['framework'])"))
-	$(eval MODEL_INPUT_SHAPE := $(shell cat ${MODEL_PACKAGE_PATH}/descriptor.json | python -c "$(MODEL_INFO_SCRIPT); print(info['inputs'][0]['shape'])"))
-	$(eval MODEL_INPUT_NAME :=  $(shell cat ${MODEL_PACKAGE_PATH}/descriptor.json | python -c "$(MODEL_INFO_SCRIPT); print(info['inputs'][0]['name'])"))
+	$(eval MODEL_PACKAGE_PATH := $(PROJECT_SLUG)/packages/$(AWS_ACCOUNT_ID)-$(MODEL_PACKAGE_NAME)-$(MODEL_PACKAGE_VERSION))
+	$(eval MODEL_FRAMEWORK :=  $(shell cat $(MODEL_PACKAGE_PATH)/descriptor.json | python -c "$(MODEL_INFO_SCRIPT); print(info['framework'])"))
+	$(eval MODEL_INPUT_SHAPE := $(shell cat $(MODEL_PACKAGE_PATH)/descriptor.json | python -c "$(MODEL_INFO_SCRIPT); print(info['inputs'][0]['shape'])"))
+	$(eval MODEL_INPUT_NAME :=  $(shell cat $(MODEL_PACKAGE_PATH)/descriptor.json | python -c "$(MODEL_INFO_SCRIPT); print(info['inputs'][0]['name'])"))
 
 set_code_info: set_account_id
-	$(eval CODE_PACKAGE_PATH := $(PROJECT_SLUG)/packages/${AWS_ACCOUNT_ID}-${CODE_PACKAGE_NAME}-${CODE_PACKAGE_VERSION})
-	$(eval CODE_ENTRY_POINT := $(shell cat ${CODE_PACKAGE_PATH}/descriptor.json | python -c "$(CODE_INFO_SCRIPT); print(info['entry']['name'].replace('/panorama', '/src'))"))
+	$(eval CODE_PACKAGE_PATH := $(PROJECT_SLUG)/packages/$(AWS_ACCOUNT_ID)-$(CODE_PACKAGE_NAME)-$(CODE_PACKAGE_VERSION))
+	$(eval CODE_ENTRY_POINT := $(shell cat $(CODE_PACKAGE_PATH)/descriptor.json | python -c "$(CODE_INFO_SCRIPT); print(info['entry']['name'].replace('/panorama', '/src'))"))
 
 $(TEST_UTILITY_MODEL): | $(MODEL_ARCHIVE) $(TEST_UTILITY_PATH) set_model_info
 	@echo INFO: Compiling model $(MODEL_ARCHIVE) for test utility ...
@@ -135,6 +136,7 @@ $(TEST_UTILITY_OUTPUT_DIR):
 
 do_run_test_utility: | $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR) set_account_id set_code_info
 	@test -n "$(VIDEO_FILE)" || (echo "$(NO_VIDEO_ERROR_MSG)"; exit 1)
+	@rm ./test_output/*
 	@TEST_UTILITY_ENVIRONMENT=1 python $(TEST_UTILITY_ENTRY_POINT) \
 		--app-name $(PROJECT_SLUG) \
 		--code-package-name $(CODE_PACKAGE_NAME) \
@@ -150,13 +152,22 @@ do_run_test_utility: | $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR) set_acco
 # --------- Build project ---------
 
 build_model: | $(MODEL_ARCHIVE)	set_account_id			## Builds the model into the Panorama project
-	$(eval MODEL_PACKAGE_PATH := ./packages/${AWS_ACCOUNT_ID}-${MODEL_PACKAGE_NAME}-${MODEL_PACKAGE_VERSION})
+	$(eval MODEL_PACKAGE_PATH := ./packages/$(AWS_ACCOUNT_ID)-$(MODEL_PACKAGE_NAME)-$(MODEL_PACKAGE_VERSION))
+	@echo INFO: Building model ...
 	cd $(PROJECT_SLUG) && \
 	panorama-cli add-raw-model \
 		--model-asset-name $(MODEL_ASSET_NAME) \
 		--model-local-path ../$(MODEL_ARCHIVE) \
 		--descriptor-path $(MODEL_PACKAGE_PATH)/descriptor.json \
 		--packages-path $(MODEL_PACKAGE_PATH)
+
+build_code: set_account_id
+	$(eval CODE_PACKAGE_PATH := ./packages/$(AWS_ACCOUNT_ID)-$(CODE_PACKAGE_NAME)-$(CODE_PACKAGE_VERSION))
+	@echo INFO: Building code container ...
+	cd $(PROJECT_SLUG) && \
+	panorama-cli build-container \
+		--container-asset-name $(CODE_ASSET_NAME) \
+		--package-path $(CODE_PACKAGE_PATH)
 
 
 # --------- Global targets ---------
