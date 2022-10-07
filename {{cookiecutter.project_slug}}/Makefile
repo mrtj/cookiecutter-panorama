@@ -92,7 +92,7 @@ TEST_UTILITY_OUTPUT_DIR := ./test_output
 VIDEO_START ?= 0
 VIDEO_STEP ?= 1
 VIDEO_STOP ?= 1000000
-NO_VIDEO_ERROR_MSG := VIDEO_FILE is not defined. Usage: make run_test_utility VIDEO_FILE=sample.mp4
+NO_VIDEO_ERROR_MSG := VIDEO_FILE is not defined.\nUsage: make run_test_utility VIDEO_FILE=sample.mp4 [VIDEO_START=123] [VIDEO_STOP=234] [VIDEO_STEP=2]
 
 define MODEL_INFO_SCRIPT
 import sys,json; info=json.load(sys.stdin)['mlModelDescriptor']
