@@ -44,9 +44,9 @@ $(MODEL_FILE): $(MODEL_SCRIPT_FILE)
 $(MODEL_ARCHIVE): $(MODEL_FILE)
 	@tar -C $(BUILD_DIR) -czf $(MODEL_ARCHIVE) $(MODEL_BASENAME).pth
 
-model: | $(MODEL_ARCHIVE) 			## Creates a dummy model file
+raw_model: | $(MODEL_ARCHIVE) 			## Creates a dummy pytorch model
 
-build: build_dir model				## Builds the Panorama project
+build: build_dir raw_model					## Builds the Panorama project
 	@echo "Build"
 
 clean:								## Cleans the build artifacts
