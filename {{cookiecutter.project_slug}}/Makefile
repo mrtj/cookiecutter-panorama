@@ -14,6 +14,7 @@ export PRINT_HELP_PYSCRIPT
 
 BUILD_DIR := build
 
+
 # --------- External variables ---------
 
 PROJECT_SLUG := {{ cookiecutter.project_slug }}
@@ -22,6 +23,7 @@ MODEL_PACKAGE_VERSION := {{ cookiecutter.model_package_version }}
 MODEL_ASSET_NAME := {{ cookiecutter.model_asset_name }}
 CODE_PACKAGE_NAME := {{ cookiecutter.code_package_name }}
 S3_WORKING_PATH := {{ cookiecutter.s3_working_path }}
+
 
 # --------- Targets to create dummy pytorch model ---------
 
@@ -41,7 +43,7 @@ torch.jit.script(MeanNet()).save(sys.argv[1])
 endef
 export MODEL_SOURCE
 
-$(MODEL_SCRIPT_FILE): build_dir
+$(MODEL_SCRIPT_FILE): | build_dir
 	@echo "$$MODEL_SOURCE" > $(MODEL_SCRIPT_FILE)
 
 $(MODEL_FILE): $(MODEL_SCRIPT_FILE)
@@ -49,6 +51,7 @@ $(MODEL_FILE): $(MODEL_SCRIPT_FILE)
 
 $(MODEL_ARCHIVE): $(MODEL_FILE)
 	@tar -C $(BUILD_DIR) -czf $(MODEL_ARCHIVE) $(MODEL_PACKAGE_NAME).pth
+
 
 # --------- Targets to get the AWS account id used in this project ---------
 
@@ -104,6 +107,17 @@ $(TEST_UTILITY_MODEL): | $(TEST_UTILITY_PATH) set_model_info
 		--model-data-shape "{\"$(MODEL_INPUT_NAME)\":$(MODEL_INPUT_SHAPE)}" \
 		--model-framework '$(MODEL_FRAMEWORK)'
 
+# --------- Build project ---------
+
+build_model: | $(MODEL_ARCHIVE)	set_account_id			## Builds the model into the Panorama project
+	$(eval MODEL_PACKAGE_PATH := ./packages/${AWS_ACCOUNT_ID}-${MODEL_PACKAGE_NAME}-${MODEL_PACKAGE_VERSION})
+	cd $(PROJECT_SLUG) && \
+	panorama-cli add-raw-model \
+		--model-asset-name $(MODEL_ASSET_NAME) \
+		--model-local-path ../$(MODEL_ARCHIVE) \
+		--descriptor-path $(MODEL_PACKAGE_PATH)/descriptor.json \
+		--packages-path $(MODEL_PACKAGE_PATH)
+
 # --------- Global targets ---------
 
 help:
@@ -118,13 +132,6 @@ test_utility: | $(TEST_UTILITY_PATH)					## Installs AWS Panorama Test Utility
 
 test_utility_model: | $(TEST_UTILITY_MODEL)				## Compiles the model for Test Utility
 
-# build_model: | $(MODEL_ARCHIVE)				## Builds the model into the Panorama project
-# 	cd $(APP_NAME) && \
-# 	panorama-cli add-raw-model \
-# 		--model-asset-name {{cookiecutter.model_asset_name}} \
-# 		--model-local-path ../$(MODEL_ARCHIVE) \
-# 		--descriptor-path ./packages/123456789012-panorama_video_processor_model-1.0/descriptor.json \
-# 		--packages-path ./packages/123456789012-panorama_video_processor_model-1.0
 
 
 build: build_dir raw_model set_account_id			 	## Builds the Panorama project
