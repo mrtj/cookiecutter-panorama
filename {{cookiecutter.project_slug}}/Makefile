@@ -51,10 +51,14 @@ $(DUMMY_MODEL_SCRIPT_FILE): | build_dir
 	@echo "$$DUMMY_MODEL_SOURCE" > $(DUMMY_MODEL_SCRIPT_FILE)
 
 $(DUMMY_MODEL_FILE): $(DUMMY_MODEL_SCRIPT_FILE)
+	@echo INFO: Creating dummy pytorch model ...
 	@python $(DUMMY_MODEL_SCRIPT_FILE) $(DUMMY_MODEL_FILE)
 
 $(MODEL_ARCHIVE): | $(DUMMY_MODEL_FILE)
+	@echo INFO: No raw model was found at $(MODEL_ARCHIVE). Creating a dummy model.
 	@tar -C $(BUILD_DIR) -czf $(MODEL_ARCHIVE) $(MODEL_PACKAGE_NAME).pth
+	@echo INFO: Dummy model asset was created at $(MODEL_ARCHIVE).
+	@echo INFO: Replace this file with your real model.
 
 
 # --------- Targets to get the AWS account id used in this project ---------
@@ -92,7 +96,7 @@ TEST_UTILITY_OUTPUT_DIR := ./test_output
 VIDEO_START ?= 0
 VIDEO_STEP ?= 1
 VIDEO_STOP ?= 1000000
-NO_VIDEO_ERROR_MSG := VIDEO_FILE is not defined.\nUsage: make run_test_utility VIDEO_FILE=sample.mp4 [VIDEO_START=123] [VIDEO_STOP=234] [VIDEO_STEP=2]
+NO_VIDEO_ERROR_MSG := Usage: make run_test_utility VIDEO_FILE=sample.mp4 [VIDEO_START=123] [VIDEO_STOP=234] [VIDEO_STEP=2]\nERROR: VIDEO_FILE is not defined.
 
 define MODEL_INFO_SCRIPT
 import sys,json; info=json.load(sys.stdin)['mlModelDescriptor']
@@ -117,9 +121,9 @@ set_code_info: set_account_id
 	$(eval CODE_PACKAGE_PATH := $(PROJECT_SLUG)/packages/${AWS_ACCOUNT_ID}-${CODE_PACKAGE_NAME}-${CODE_PACKAGE_VERSION})
 	$(eval CODE_ENTRY_POINT := $(shell cat ${CODE_PACKAGE_PATH}/descriptor.json | python -c "$(CODE_INFO_SCRIPT); print(info['entry']['name'].replace('/panorama', '/src'))"))
 
-$(TEST_UTILITY_MODEL): | $(TEST_UTILITY_PATH) set_model_info
-	@echo Compiling model $(MODEL_ARCHIVE) for test utility ...
-	python $(TEST_UTILITY_COMPILE_ENTRY_POINT) \
+$(TEST_UTILITY_MODEL): | $(MODEL_ARCHIVE) $(TEST_UTILITY_PATH) set_model_info
+	@echo INFO: Compiling model $(MODEL_ARCHIVE) for test utility ...
+	@python $(TEST_UTILITY_COMPILE_ENTRY_POINT) \
 		--s3-model-location $(S3_WORKING_PATH) \
 		--model-node-name $(MODEL_ASSET_NAME) \
 		--model-file-basename $(MODEL_ARCHIVE_BASENAME) \
@@ -129,9 +133,9 @@ $(TEST_UTILITY_MODEL): | $(TEST_UTILITY_PATH) set_model_info
 $(TEST_UTILITY_OUTPUT_DIR):
 	mkdir -p $(TEST_UTILITY_OUTPUT_DIR)
 
-run_test_utility: | $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR) set_account_id set_code_info
+do_run_test_utility: | $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR) set_account_id set_code_info
 	@test -n "$(VIDEO_FILE)" || (echo "$(NO_VIDEO_ERROR_MSG)"; exit 1)
-	TEST_UTILITY_ENVIRONMENT=1 python $(TEST_UTILITY_ENTRY_POINT) \
+	@TEST_UTILITY_ENVIRONMENT=1 python $(TEST_UTILITY_ENTRY_POINT) \
 		--app-name $(PROJECT_SLUG) \
 		--code-package-name $(CODE_PACKAGE_NAME) \
 		--py-file $(CODE_PACKAGE_PATH)$(CODE_ENTRY_POINT) \
@@ -169,7 +173,7 @@ test_utility: | $(TEST_UTILITY_PATH)					## Installs AWS Panorama Test Utility
 
 test_utility_model: | $(TEST_UTILITY_MODEL)				## Compiles the model for Test Utility
 
-
+run_test_utility: do_run_test_utility					## Runs the Test Utility
 
 build: build_dir raw_model set_account_id			 	## Builds the Panorama project
 	@echo "Build"
