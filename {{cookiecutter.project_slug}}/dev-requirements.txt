@@ -2,5 +2,6 @@ dlr==1.10.0
 ipython==7.34.0
 matplotlib==3.5.3
 opencv-python-headless==4.6.0.66
+panoramacli==1.1.6
 torch==1.12.1
 torchvision==0.13.1
