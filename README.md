@@ -36,3 +36,25 @@ Then:
 - Pick up the manifest json, head to [AWS Panorama Console](https://console.aws.amazon.com/panorama/home) and deploy your application!
 
 Refer to the [README.md]({{cookiecutter.project_slug}}/README.md) of the generated project for more information.
+
+## Project template parameter reference
+
+| parameter | default value | description |
+|-----------|---------------|-------------|
+| project_name | Panorama Video Processor | The human-readable name of the project |
+| project_slug | panorama_video_processor | Project slug that can be used in file names, identifiers, etc. Should contain only letters, numbers and underscores. |
+| s3_working_bucket | my_bucket | An AWS S3 bucket where the build system have read/write privileges.  |
+| s3_working_path | s3://my_bucket/panorama_projects/panorama_video_processor | A full S3 URI in the bucket above. This path will be used for model compilation, archiving manifest files and similar. |
+| camera_node_name | camera_input | The name of the camera input node in the manifest file. In most of the cases you can leave it to the default value. |
+| display_node_name | display_output | The name of the display output node in the manifest file. In most of the cases you can leave it to the default value. |
+| code_package_name | panorama_video_processor_logic | The name of the code package. The package name - package version tuple should be unique in your AWS account. |
+| code_package_version | 1.0 | The code package version. You can have several versions of your package deployed contemporarily to your account. |
+| code_asset_name | panorama_video_processor_logic_asset | The code asset name. |
+| code_node_name | panorama_video_processor_logic_node | The name of the code node in the manifest file. |
+| model_package_name | panorama_video_processor_model | The name of the model package. The package name - package version tuple should be unique in your AWS account. |
+| model_package_version | 1.0 | The model package version. You can have several versions of your package deployed contemporarily to your account. |
+| model_asset_name | panorama_video_processor_model_asset | The model asset name. |
+| model_node_name | panorama_video_processor_model_node | The name of the model node in the manifest file. |
+| model_input_name | input0 | The name of the input of the deep learning model. The model will be compiled with this input name, and you should refer the input with this name from the application source code. |
+| model_processing_width | 224 | The width of the input image of the deep learning model. The input frame will be resized to this size before sending it to the model. |
+| model_processing_height | 224 | The height of the input image of the deep learning model. The input frame will be resized to this size before sending it to the model. |
