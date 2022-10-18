@@ -55,4 +55,10 @@ If you have [ffmpeg](https://www.ffmpeg.org/download.html) installed, you can co
 
 ## Development
 
+### Source code
+
 The source code of the application can be found in the [`{{cookiecutter.project_slug}}/packages/123456789012-{{cookiecutter.code_package_name}}-{{cookiecutter.code_package_version}}/src`]({{cookiecutter.project_slug}}/packages/123456789012-{{cookiecutter.code_package_name}}-{{cookiecutter.code_package_version}}/src) folder. Modify the source code and rebuild the application or start the Test Utility.
+
+### Dummy model
+
+The build system generates a dummy deep learning model that is already integrated to the rest of the project. The dummy model simply calculates the RGB-wise mean of the input video frame. Nevertheless the simple functionality, this model can be compiled to the Panorama appliance GPU or the test utility, so you can test the whole model development pipeline. Later on, you can replace the model at `models/{{ cookiecutter.model_package_name }}.tar.gz` to a real model.
