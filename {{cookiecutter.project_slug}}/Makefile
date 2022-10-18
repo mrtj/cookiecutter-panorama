@@ -1,5 +1,6 @@
-.PHONY: help build clean #package
+.PHONY: help clean init-repo import do-import build build_code build_model test_utility do_test_utility anonimize do_anonimize
 .DEFAULT_GOAL := help
+MAKEFLAGS += --no-builtin-rules
 
 BUILD_DIR := _build
 SCRIPTS_DIR := scripts
@@ -21,27 +22,30 @@ S3_WORKING_PATH := {{ cookiecutter.s3_working_path }}
 # --------- Derived variables ---------
 
 AWS_ACCOUNT_ID_SCRIPT := $(SCRIPTS_DIR)/account_id.py
-AWS_ACCOUNT_ID := $(shell python $(AWS_ACCOUNT_ID_SCRIPT))
+AWS_ACCOUNT_ID = $(shell python $(AWS_ACCOUNT_ID_SCRIPT))
 
 CODE_INFO_SCRIPT := import sys,json; info=json.load(sys.stdin)['runtimeDescriptor']
 MODEL_INFO_SCRIPT := import sys,json; info=json.load(sys.stdin)['mlModelDescriptor']
 
-CODE_PACKAGE_PATH := packages/$(AWS_ACCOUNT_ID)-$(CODE_PACKAGE_NAME)-$(CODE_PACKAGE_VERSION)
-CODE_PACKAGE_PATH_BUILD := $(PROJECT_SLUG)/$(CODE_PACKAGE_PATH)
-CODE_DESCRIPTOR_PATH := $(CODE_PACKAGE_PATH_BUILD)/descriptor.json
-CODE_ENTRY_POINT := $(shell cat $(CODE_DESCRIPTOR_PATH) | python -c "$(CODE_INFO_SCRIPT); print(info['entry']['name'].replace('/panorama', '/src'))")
+CODE_PACKAGE_PATH = packages/$(AWS_ACCOUNT_ID)-$(CODE_PACKAGE_NAME)-$(CODE_PACKAGE_VERSION)
+CODE_PACKAGE_PATH_BUILD = $(PROJECT_SLUG)/$(CODE_PACKAGE_PATH)
+CODE_DESCRIPTOR_PATH = $(CODE_PACKAGE_PATH_BUILD)/descriptor.json
+CODE_ENTRY_POINT = $(shell cat $(CODE_DESCRIPTOR_PATH) | python -c "$(CODE_INFO_SCRIPT); print(info['entry']['name'].replace('/panorama', '/src'))")
 CODE_SOURCES := $(wildcard $(CODE_PACKAGE_PATH_BUILD)/**/*)
 
-MODEL_PACKAGE_PATH := packages/$(AWS_ACCOUNT_ID)-$(MODEL_PACKAGE_NAME)-$(MODEL_PACKAGE_VERSION)
-MODEL_PACKAGE_PATH_BUILD := $(PROJECT_SLUG)/$(MODEL_PACKAGE_PATH)
-MODEL_DESCRIPTOR_PATH := $(MODEL_PACKAGE_PATH_BUILD)/descriptor.json
-MODEL_FRAMEWORK :=  $(shell cat $(MODEL_DESCRIPTOR_PATH) | python -c "$(MODEL_INFO_SCRIPT); print(info['framework'])")
-MODEL_INPUT_SHAPE := $(shell cat $(MODEL_DESCRIPTOR_PATH) | python -c "$(MODEL_INFO_SCRIPT); print(info['inputs'][0]['shape'])")
-MODEL_INPUT_NAME :=  $(shell cat $(MODEL_DESCRIPTOR_PATH) | python -c "$(MODEL_INFO_SCRIPT); print(info['inputs'][0]['name'])")
-MODEL_SOURCES := $(wildcard $(MODEL_PACKAGE_PATH_BUILD)/**/*)
+MODEL_PACKAGE_PATH = packages/$(AWS_ACCOUNT_ID)-$(MODEL_PACKAGE_NAME)-$(MODEL_PACKAGE_VERSION)
+MODEL_PACKAGE_PATH_BUILD = $(PROJECT_SLUG)/$(MODEL_PACKAGE_PATH)
+MODEL_DESCRIPTOR_PATH = $(MODEL_PACKAGE_PATH_BUILD)/descriptor.json
+MODEL_FRAMEWORK =  $(shell cat $(MODEL_DESCRIPTOR_PATH) | python -c "$(MODEL_INFO_SCRIPT); print(info['framework'])")
+MODEL_INPUT_SHAPE = $(shell cat $(MODEL_DESCRIPTOR_PATH) | python -c "$(MODEL_INFO_SCRIPT); print(info['inputs'][0]['shape'])")
+MODEL_INPUT_NAME =  $(shell cat $(MODEL_DESCRIPTOR_PATH) | python -c "$(MODEL_INFO_SCRIPT); print(info['inputs'][0]['name'])")
+MODEL_SOURCES = $(wildcard $(MODEL_PACKAGE_PATH_BUILD)/**/*)
 
 MODEL_ARCHIVE_BASENAME := models/$(MODEL_PACKAGE_NAME)
 MODEL_ARCHIVE := $(MODEL_ARCHIVE_BASENAME).tar.gz
+
+MANIFEST_PATH := graphs/$(PROJECT_SLUG)/graph.json
+MANIFEST_PATH_BUILD := $(PROJECT_SLUG)/$(MANIFEST_PATH)
 
 # --------- Help script ---------
 
@@ -105,7 +109,7 @@ $(TEST_UTILITY_MODEL): $(MODEL_ARCHIVE) | $(TEST_UTILITY_PATH)
 $(TEST_UTILITY_OUTPUT_DIR):
 	@mkdir -p $(TEST_UTILITY_OUTPUT_DIR)
 
-do_run_test_utility: | $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR)
+do_test_utility: | $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR)
 	@echo
 	@echo INFO: Starting Panorama Test Utility ...
 	@echo
@@ -123,13 +127,49 @@ do_run_test_utility: | $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR)
 		--video-step $(VIDEO_STEP) \
 		--video-stop $(VIDEO_STOP)
 
+# --------- Import Panorama project ---------
+
+do-import:
+	@echo
+	@echo INFO: Importing project to the AWS account ...
+	@echo
+	cd $(PROJECT_SLUG) && \
+		panorama-cli import-application
+
+# --------- Samplify ---------
+
+EXAMPLE_ACCOUNT_ID := 123456789012
+EXAMPLE_CODE_PACKAGE_PATH := packages/$(EXAMPLE_ACCOUNT_ID)-$(CODE_PACKAGE_NAME)-$(CODE_PACKAGE_VERSION)
+EXAMPLE_MODEL_PACKAGE_PATH := packages/$(EXAMPLE_ACCOUNT_ID)-$(MODEL_PACKAGE_NAME)-$(MODEL_PACKAGE_VERSION)
+
+check_anonimized:
+	@if [ "$(AWS_ACCOUNT_ID)" != "$(EXAMPLE_ACCOUNT_ID)" ]; then \
+		echo && \
+		echo "WARNING: AWS account id was not anonimized. Execute 'make anonimize' before committing." && \
+		echo && \
+		exit 1; \
+	fi
+
+do_anonimize: | $(BUILD_DIR)
+	@echo
+	@echo Removing AWS account id references from project file ...
+	@echo
+	@cd $(PROJECT_SLUG) && \
+		if [ "$(CODE_PACKAGE_PATH)" != "$(EXAMPLE_CODE_PACKAGE_PATH)" ]; then \
+			mv $(CODE_PACKAGE_PATH) $(EXAMPLE_CODE_PACKAGE_PATH); \
+		fi && \
+		if [ "$(MODEL_PACKAGE_PATH)" != "$(EXAMPLE_MODEL_PACKAGE_PATH)" ]; then \
+			mv $(MODEL_PACKAGE_PATH) $(EXAMPLE_MODEL_PACKAGE_PATH); \
+		fi && \
+		sed -i "s/$(AWS_ACCOUNT_ID)/$(EXAMPLE_ACCOUNT_ID)/ig" $(MANIFEST_PATH)
+
 # --------- Build project ---------
 
 BUILD_MODEL_FLAG := $(BUILD_DIR)/build_model
 
-build_model: $(BUILD_MODEL_FLAG) ## Builds the model into the Panorama project
+build_model: $(BUILD_MODEL_FLAG)
 
-$(BUILD_MODEL_FLAG): $(MODEL_SOURCES) $(MODEL_ARCHIVE) | $(BUILD_DIR)
+$(BUILD_MODEL_FLAG): $(MODEL_SOURCES) $(MODEL_ARCHIVE) $(IMPORT_FLAG) | $(BUILD_DIR)
 	@echo
 	@echo INFO: Building model ...
 	@echo
@@ -145,7 +185,7 @@ BUILD_CODE_FLAG := $(BUILD_DIR)/build_code
 
 build_code: $(BUILD_CODE_FLAG)
 
-$(BUILD_CODE_FLAG): $(CODE_SOURCES) | $(BUILD_DIR)
+$(BUILD_CODE_FLAG): $(CODE_SOURCES) | $(IMPORT_FLAG) $(BUILD_DIR)
 	@echo
 	@echo INFO: Building code container ...
 	@echo
@@ -155,6 +195,47 @@ $(BUILD_CODE_FLAG): $(CODE_SOURCES) | $(BUILD_DIR)
 		--package-path $(CODE_PACKAGE_PATH)
 	@touch $(BUILD_CODE_FLAG)
 
+# --------- Initialize git repo ---------
+
+INIT_REPO_FLAG := $(BUILD_DIR)/init_repo
+
+.git:
+	@echo
+	@echo INFO: Setting up git repository ...
+	@echo
+	@git init .
+
+.git/hooks/pre-commit: .git
+	@echo
+	@echo INFO: Registering git hooks ...
+	@echo
+	@ln scripts/hooks/pre-commit .git/hooks/pre-commit
+
+$(INIT_REPO_FLAG): | $(BUILD_DIR) .git .git/hooks/pre-commit
+	@echo
+	@echo INFO: Creating initial commit ...
+	@echo
+	@git add .
+	@git commit -m "Initial commit"
+	@touch $(INIT_REPO_FLAG)
+
+# --------- Package application ---------
+
+COMPILED_MANIFEST_PATH := $(BUILD_DIR)/$(PROJECT_SLUG)-v$(CODE_PACKAGE_VERSION).$(AWS_ACCOUNT_ID).json
+ASSETS = $(wildcard $(PROJECT_SLUG)/assets/*)
+
+$(COMPILED_MANIFEST_PATH): $(ASSETS) | $(BUILD_DIR)
+	@echo
+	@echo Uploading compiled packages to AWS account ...
+	@echo
+	cd $(PROJECT_SLUG) && panorama-cli package-application
+	cp $(MANIFEST_PATH_BUILD) $(COMPILED_MANIFEST_PATH)
+	@echo
+	@echo You can now deploy the application using $(COMPILED_MANIFEST_PATH)
+	@echo
+
+package: $(COMPILED_MANIFEST_PATH)
+
 # --------- Global targets ---------
 
 help:
@@ -163,15 +244,15 @@ help:
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
 
-build: build_model build_code			 				## Builds the Panorama project
+init-repo: $(INIT_REPO_FLAG)					## Initializes a git repository
 
-dummy_model: | $(MODEL_ARCHIVE) 						## Creates a dummy pytorch model
+import: do-import								## Imports the Panorama project to the AWS account
 
-install_test_utility: | $(TEST_UTILITY_PATH)			## Installs AWS Panorama Test Utility
+build: build_model build_code package			## Builds the Panorama project
 
-test_utility_model: | $(TEST_UTILITY_MODEL)				## Compiles the model for Test Utility
+test_utility: do_test_utility 					## Runs the Test Utility (usage: make test_utility VIDEO_FILE=video.mp4)
 
-test_utility: do_run_test_utility						## Runs the Test Utility
+anonimize: do_anonimize							## Removes AWS account id references from the project
 
-clean:													## Cleans the build artifacts
+clean:											## Cleans the build artifacts
 	@rm -rf $(BUILD_DIR)

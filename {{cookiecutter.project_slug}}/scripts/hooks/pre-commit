@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Pre-commit git hook to check if AWS account was anonymized before committing
+make check_anonimized
