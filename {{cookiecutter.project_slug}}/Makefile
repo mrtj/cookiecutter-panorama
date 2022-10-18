@@ -1,4 +1,4 @@
-.PHONY: help clean init-repo import do-import build build_code build_model test_utility do_test_utility anonimize do_anonimize
+.PHONY: help clean init-repo import do-import build build_code build_model test_utility do_test_utility anonimize do_anonymize
 .DEFAULT_GOAL := help
 MAKEFLAGS += --no-builtin-rules
 
@@ -83,6 +83,8 @@ TEST_UTILITY_ENTRY_POINT := ${TEST_UTILITY_PATH}/test_utility/panorama_test_util
 TEST_UTILITY_COMPILE_ENTRY_POINT := ${TEST_UTILITY_PATH}/test_utility/panorama_test_utility_compile.py
 TEST_UTILITY_MODEL := models/$(MODEL_ASSET_NAME)
 TEST_UTILITY_OUTPUT_DIR := ./test_output
+TEST_UTILITY_VIDEO := ./test_output.mp4
+VIDEO_FPS ?= 20
 
 VIDEO_START ?= 0
 VIDEO_STEP ?= 1
@@ -109,7 +111,7 @@ $(TEST_UTILITY_MODEL): $(MODEL_ARCHIVE) | $(TEST_UTILITY_PATH)
 $(TEST_UTILITY_OUTPUT_DIR):
 	@mkdir -p $(TEST_UTILITY_OUTPUT_DIR)
 
-do_test_utility: | $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR)
+do_test_utility: | $(TEST_UTILITY_PATH) $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR)
 	@echo
 	@echo INFO: Starting Panorama Test Utility ...
 	@echo
@@ -126,6 +128,20 @@ do_test_utility: | $(TEST_UTILITY_MODEL) $(TEST_UTILITY_OUTPUT_DIR)
 		--video-start $(VIDEO_START) \
 		--video-step $(VIDEO_STEP) \
 		--video-stop $(VIDEO_STOP)
+
+$(TEST_UTILITY_VIDEO): $(wildcard $(TEST_UTILITY_OUTPUT_DIR)/*)
+	@echo
+	@echo INFO: Creating video from test utility output ...
+	@echo INFO: VIDEO_FPS=$(VIDEO_FPS) (you can set this using 'make test-video VIDEO_FPS=$(VIDEO_FPS)')
+	@echo INFO: Ensure you have ffmpeg installed.
+	@echo
+	ffmpeg \
+		-framerate $(VIDEO_FPS) \
+		-i $(TEST_UTILITY_OUTPUT_DIR)/screenshot_0_%04d.png \
+		-vcodec libx264 \
+		-pix_fmt yuv420p \
+		-y \
+		$(TEST_UTILITY_VIDEO)
 
 # --------- Import Panorama project ---------
 
@@ -150,7 +166,7 @@ check_anonimized:
 		exit 1; \
 	fi
 
-do_anonimize: | $(BUILD_DIR)
+do_anonymize: | $(BUILD_DIR)
 	@echo
 	@echo Removing AWS account id references from project file ...
 	@echo
@@ -234,8 +250,6 @@ $(COMPILED_MANIFEST_PATH): $(ASSETS) | $(BUILD_DIR)
 	@echo You can now deploy the application using $(COMPILED_MANIFEST_PATH)
 	@echo
 
-package: $(COMPILED_MANIFEST_PATH)
-
 # --------- Global targets ---------
 
 help:
@@ -244,15 +258,19 @@ help:
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
 
-init-repo: $(INIT_REPO_FLAG)					## Initializes a git repository
+init-repo: $(INIT_REPO_FLAG)			## Initializes a git repository
 
-import: do-import								## Imports the Panorama project to the AWS account
+import: do-import						## Imports the Panorama project to the AWS account
 
-build: build_model build_code package			## Builds the Panorama project
+build: build_model build_code 			## Builds the Panorama project
 
-test_utility: do_test_utility 					## Runs the Test Utility (usage: make test_utility VIDEO_FILE=video.mp4)
+package: $(COMPILED_MANIFEST_PATH)		## Packages the compiled panorama application and uploads it to your AWS account.
 
-anonimize: do_anonimize							## Removes AWS account id references from the project
+test-utility: do_test_utility 			## Runs the Test Utility (usage: make test_utility VIDEO_FILE=video.mp4)
 
-clean:											## Cleans the build artifacts
+test-video: $(TEST_UTILITY_VIDEO)		## Concatenates the output frames of Test Utility into a video
+
+anonymize: do_anonymize					## Removes AWS account id references from the project
+
+clean:									## Cleans the build artifacts
 	@rm -rf $(BUILD_DIR)
