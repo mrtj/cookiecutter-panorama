@@ -44,7 +44,7 @@ Refer to the [README.md]({{cookiecutter.project_slug}}/README.md) of the generat
 | project_name | Panorama Video Processor | The human-readable name of the project |
 | project_slug | panorama_video_processor | Project slug that can be used in file names, identifiers, etc. Should contain only letters, numbers and underscores. |
 | s3_working_bucket | my_bucket | An AWS S3 bucket where the build system have read/write privileges.  |
-| s3_working_path | s3://my_bucket/<wbr>panorama_projects/<wbr>panorama_video_processor | A full S3 URI in the bucket above. This path will be used for model compilation, archiving manifest files and similar. |
+| s3_working_path | s3://my_bucket/&shy;panorama_projects/&shy;panorama_video_processor | A full S3 URI in the bucket above. This path will be used for model compilation, archiving manifest files and similar. |
 | camera_node_name | camera_input | The name of the camera input node in the manifest file. In most of the cases you can leave it to the default value. |
 | display_node_name | display_output | The name of the display output node in the manifest file. In most of the cases you can leave it to the default value. |
 | code_package_name | panorama_video_processor_logic | The name of the code package. The package name - package version tuple should be unique in your AWS account. |
