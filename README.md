@@ -3,7 +3,7 @@
 [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template for [AWS Panorama](https://aws.amazon.com/panorama/) projects.
 
 - GitHub repo: https://github.com/mrtj/cookiecutter-panorama/
-- Free software: BSD license
+- Free software: MIT license
 
 ## Features
 
@@ -35,5 +35,4 @@ Then:
 - Upload the compiled application container and packaged deep learning model with `make package`. This script will also output the path of the compile manifest json.
 - Pick up the manifest json, head to [AWS Panorama Console](https://console.aws.amazon.com/panorama/home) and deploy your application!
 
-Refer to the README.md of the generated project for more information.
-
+Refer to the [README.md]({{cookiecutter.project_slug}}/README.md) of the generated project for more information.
