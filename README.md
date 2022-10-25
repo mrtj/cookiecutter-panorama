@@ -2,7 +2,7 @@
 
 [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template for [AWS Panorama](https://aws.amazon.com/panorama/) projects.
 
-- Gentle introduction: https://towardsdatascience.com/deploy-your-first-computer-vision-app-for-aws-panorama-in-five-minutes-221e974606e3
+- Gentle introduction: [Deploy your first computer vision app for AWS Panorama](https://towardsdatascience.com/deploy-your-first-computer-vision-app-for-aws-panorama-in-five-minutes-221e974606e3) on Towards Data Science
 - GitHub repo: https://github.com/mrtj/cookiecutter-panorama/
 - Free software: MIT license
 
