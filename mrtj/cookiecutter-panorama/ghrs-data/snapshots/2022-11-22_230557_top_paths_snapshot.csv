@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/mrtj/cookiecutter-panorama,8,4
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D,8,2
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/scripts,3,2
+/mrtj/cookiecutter-panorama/blob/main/README.md,2,2
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D,2,1
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/scripts/account_id.py,1,1
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/scripts/create_model.py,1,1
+/mrtj/cookiecutter-panorama/blob/main/cookiecutter.json,1,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages,1,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/models,1,1
