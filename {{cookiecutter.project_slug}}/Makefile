@@ -1,4 +1,4 @@
-.PHONY: help clean init-repo import do-import build build_code build_model test_utility do_test_utility anonimize do_anonymize
+.PHONY: help clean init-repo import do-import build build_code build_model test_utility do_test_utility anonymize do_anonymize
 .DEFAULT_GOAL := help
 MAKEFLAGS += --no-builtin-rules
 
@@ -158,10 +158,10 @@ EXAMPLE_ACCOUNT_ID := 123456789012
 EXAMPLE_CODE_PACKAGE_PATH := packages/$(EXAMPLE_ACCOUNT_ID)-$(CODE_PACKAGE_NAME)-$(CODE_PACKAGE_VERSION)
 EXAMPLE_MODEL_PACKAGE_PATH := packages/$(EXAMPLE_ACCOUNT_ID)-$(MODEL_PACKAGE_NAME)-$(MODEL_PACKAGE_VERSION)
 
-check_anonimized:
+check_anonymized:
 	@if [ "$(AWS_ACCOUNT_ID)" != "$(EXAMPLE_ACCOUNT_ID)" ]; then \
 		echo && \
-		echo "WARNING: AWS account id was not anonimized. Execute 'make anonimize' before committing." && \
+		echo "WARNING: AWS account id was not anonymized. Execute 'make anonymize' before committing." && \
 		echo && \
 		exit 1; \
 	fi
