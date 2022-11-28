@@ -247,6 +247,7 @@ $(COMPILED_MANIFEST_PATH): $(ASSETS) | $(BUILD_DIR)
 	cd $(PROJECT_SLUG) && panorama-cli package-application
 	cp $(MANIFEST_PATH_BUILD) $(COMPILED_MANIFEST_PATH)
 	@echo
+	@echo Packages have been successfully registered in account: $(AWS_ACCOUNT_ID), region: $(shell aws configure get region --output text)
 	@echo You can now deploy the application using $(COMPILED_MANIFEST_PATH)
 	@echo
 
