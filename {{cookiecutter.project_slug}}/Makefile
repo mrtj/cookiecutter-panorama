@@ -1,4 +1,4 @@
-.PHONY: help clean init-repo import do-import build build_code build_model test_utility do_test_utility anonymize do_anonymize
+.PHONY: help clean init_repo import do_import build build_code build_model test_utility do_test_utility anonymize do_anonymize do_shell
 .DEFAULT_GOAL := help
 MAKEFLAGS += --no-builtin-rules
 
@@ -145,7 +145,7 @@ $(TEST_UTILITY_VIDEO): $(wildcard $(TEST_UTILITY_OUTPUT_DIR)/*)
 
 # --------- Import Panorama project ---------
 
-do-import:
+do_import:
 	@echo
 	@echo INFO: Importing project to the AWS account ...
 	@echo
@@ -251,6 +251,13 @@ $(COMPILED_MANIFEST_PATH): $(ASSETS) | $(BUILD_DIR)
 	@echo You can now deploy the application using $(COMPILED_MANIFEST_PATH)
 	@echo
 
+# --------- Shell ---------
+
+do_shell: build
+	cd $(PROJECT_SLUG)/$(CODE_PACKAGE_PATH) && \
+	docker build . -t $(CODE_ASSET_NAME):latest
+	docker run --rm -it --entrypoint bash -t $(CODE_ASSET_NAME):latest
+
 # --------- Global targets ---------
 
 help:
@@ -259,11 +266,13 @@ help:
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
 
-init-repo: $(INIT_REPO_FLAG)			## Initializes a git repository
+init_repo: $(INIT_REPO_FLAG)			## Initializes a git repository
 
-import: do-import						## Imports the Panorama project to the AWS account
+import: do_import						## Imports the Panorama project to the AWS account
 
 build: build_model build_code 			## Builds the Panorama project
+
+shell: do_shell							## Starts a shell interpreter in the compiled Panorama container. This will run only on an ARM64 architecture.
 
 package: $(COMPILED_MANIFEST_PATH)		## Packages the compiled panorama application and uploads it to your AWS account.
 
