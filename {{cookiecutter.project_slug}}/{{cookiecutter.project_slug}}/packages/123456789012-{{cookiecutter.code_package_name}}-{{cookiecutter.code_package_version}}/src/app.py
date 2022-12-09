@@ -31,11 +31,13 @@ logger = get_logger(level=logging.INFO, test_utility=TEST_UTILITY_ENVIRONMENT)
 
 class Application(panoramasdk.node):
 
+    APPLICATION_NAME: str = '{{ cookiecutter.project_slug }}'
     MODEL_NODE_NAME: str = (
         '{{ cookiecutter.model_asset_name }}' if TEST_UTILITY_ENVIRONMENT else
         '{{ cookiecutter.model_node_name }}'
     ) # The test utility erroneously wants the model asset name instead of model node name
     MODEL_INPUT_NAME: str = '{{ cookiecutter.model_input_name }}'
+    MODEL_BATCH_SIZE: int = int('{{ cookiecutter.model_batch_size }}')
     MODEL_INPUT_WIDTH: int = int('{{ cookiecutter.model_processing_width }}')
     MODEL_INPUT_HEIGHT: int = int('{{ cookiecutter.model_processing_height }}')
     MODEL_INPUT_SIZE = (MODEL_INPUT_WIDTH, MODEL_INPUT_HEIGHT)

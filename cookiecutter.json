@@ -14,6 +14,7 @@
     "model_asset_name": "{{ cookiecutter.model_package_name }}_asset",
     "model_node_name": "{{ cookiecutter.model_package_name }}_node",
     "model_input_name": "input0",
+    "model_batch_size": "1",
     "model_processing_width": "224",
     "model_processing_height": "224"
 }

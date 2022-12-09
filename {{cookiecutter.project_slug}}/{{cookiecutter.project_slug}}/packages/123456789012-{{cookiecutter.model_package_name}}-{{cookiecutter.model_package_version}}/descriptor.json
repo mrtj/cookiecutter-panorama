@@ -4,8 +4,13 @@
         "framework": "PYTORCH",
         "inputs": [
             {
-                "name": "{{cookiecutter.model_input_name}}",
-                "shape": [1, 3, {{cookiecutter.model_processing_height}}, {{cookiecutter.model_processing_width}}]
+                "name": "{{ cookiecutter.model_input_name }}",
+                "shape": [
+                    {{ cookiecutter.model_batch_size }},
+                    3,
+                    {{ cookiecutter.model_processing_height }},
+                    {{ cookiecutter.model_processing_width }}
+                ]
             }
         ]
     }

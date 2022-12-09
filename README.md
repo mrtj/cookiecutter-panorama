@@ -57,5 +57,6 @@ Refer to the [README.md]({{cookiecutter.project_slug}}/README.md) of the generat
 | model_asset_name | panorama_video_processor_model_asset | The model asset name. |
 | model_node_name | panorama_video_processor_model_node | The name of the model node in the manifest file. |
 | model_input_name | input0 | The name of the input of the deep learning model. The model will be compiled with this input name, and you should refer the input with this name from the application source code. |
+| model_batch_size | 1 | The inference batch size of the deep learning model. You can process this number of images simultaneously with the model. |
 | model_processing_width | 224 | The width of the input image of the deep learning model. The input frame will be resized to this size before sending it to the model. |
 | model_processing_height | 224 | The height of the input image of the deep learning model. The input frame will be resized to this size before sending it to the model. |
