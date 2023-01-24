@@ -169,7 +169,7 @@ do_anonymize: | $(BUILD_DIR)
 
 # --------- Build project ---------
 
-BUILD_MODEL_FLAG := $(BUILD_DIR)/build_model
+BUILD_MODEL_FLAG := $(BUILD_DIR)/build_model-$(AWS_ACCOUNT_ID)
 
 build_model: $(BUILD_MODEL_FLAG)
 
@@ -185,7 +185,7 @@ $(BUILD_MODEL_FLAG): $(MODEL_SOURCES) $(MODEL_ARCHIVE) $(IMPORT_FLAG) | $(BUILD_
 		--packages-path $(MODEL_PACKAGE_PATH)
 	@touch $(BUILD_MODEL_FLAG)
 
-BUILD_CODE_FLAG := $(BUILD_DIR)/build_code
+BUILD_CODE_FLAG := $(BUILD_DIR)/build_code-$(AWS_ACCOUNT_ID)
 
 build_code: $(BUILD_CODE_FLAG)
 
