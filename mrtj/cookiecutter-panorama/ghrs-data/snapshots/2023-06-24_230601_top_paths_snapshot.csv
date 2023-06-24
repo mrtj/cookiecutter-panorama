@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/mrtj/cookiecutter-panorama,25,6
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D,9,4
+/mrtj/cookiecutter-panorama/blob/main/README.md,8,3
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/README.md,6,3
+/mrtj/cookiecutter-panorama/tree/main/.github/workflows,4,3
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/models,3,2
+/mrtj/cookiecutter-panorama/blob/main/.github/workflows/github-repo-stats.yml,2,2
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D,2,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages,2,1
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages/123456789012-%7B%7Bcookiecutter.code_package_name%7D%7D-%7B%7Bcookiecutter.code_package_version%7D%7D/src/app.py,1,1
