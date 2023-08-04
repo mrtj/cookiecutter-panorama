@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/mrtj/cookiecutter-panorama,11,3
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D,5,2
+/mrtj/cookiecutter-panorama/blob/main/README.md,4,2
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/scripts/create_model.py,3,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages,3,1
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages/123456789012-%7B%7Bcookiecutter.code_package_name%7D%7D-%7B%7Bcookiecutter.code_package_version%7D%7D/src/app.py,2,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D,2,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages/123456789012-%7B%7Bcookiecutter.code_package_name%7D%7D-%7B%7Bcookiecutter.code_package_version%7D%7D,2,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages/123456789012-%7B%7Bcookiecutter.code_package_name%7D%7D-%7B%7Bcookiecutter.code_package_version%7D%7D/src,2,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages/123456789012-%7B%7Bcookiecutter.model_package_name%7D%7D-%7B%7Bcookiecutter.model_package_version%7D%7D,2,1
