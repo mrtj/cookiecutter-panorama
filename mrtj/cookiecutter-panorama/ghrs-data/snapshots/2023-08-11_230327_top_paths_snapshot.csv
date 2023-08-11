@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D,24,2
+/mrtj/cookiecutter-panorama/blob/main/README.md,12,1
+/mrtj/cookiecutter-panorama,10,4
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/scripts,8,2
+/mrtj/cookiecutter-panorama/tree/main,8,1
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/dev-requirements.txt,6,2
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/models,6,2
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D,6,1
+/mrtj/cookiecutter-panorama/tree/main/.github/workflows,5,1
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/scripts/hooks/pre-commit,4,1
