@@ -1,0 +1,9 @@
+url_path,views_total,views_unique
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D,5,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/scripts,3,1
+/mrtj/cookiecutter-panorama/tree/main/.github/workflows,3,1
+/mrtj/cookiecutter-panorama,2,2
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/scripts/create_model.py,2,1
+/mrtj/cookiecutter-panorama/blob/main/cookiecutter.json,2,1
+/mrtj/cookiecutter-panorama/blob/main/.github/workflows/github-repo-stats.yml,2,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/models,2,1
