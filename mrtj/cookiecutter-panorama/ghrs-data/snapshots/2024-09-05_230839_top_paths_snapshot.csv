@@ -1,0 +1,9 @@
+url_path,views_total,views_unique
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/dev-requirements.txt,4,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages/123456789012-%7B%7Bcookiecutter.code_package_name%7D%7D-%7B%7Bcookiecutter.code_package_version%7D%7D,3,1
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages/123456789012-%7B%7Bcookiecutter.code_package_name%7D%7D-%7B%7Bcookiecutter.code_package_version%7D%7D/Dockerfile,2,1
+/mrtj/cookiecutter-panorama/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages/123456789012-%7B%7Bcookiecutter.code_package_name%7D%7D-%7B%7Bcookiecutter.code_package_version%7D%7D/requirements.txt,2,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D,2,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D,2,1
+/mrtj/cookiecutter-panorama/tree/main/%7B%7Bcookiecutter.project_slug%7D%7D/%7B%7Bcookiecutter.project_slug%7D%7D/packages,2,1
+/mrtj/cookiecutter-panorama,1,1
